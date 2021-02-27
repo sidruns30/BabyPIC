@@ -1,0 +1,19 @@
+# NAMING CONVENTION
+- All class names should be completely capitalized
+- Class object names should be the class name (only the first letter)
+  capitalized followed by a descriptive word with the first letter 
+  capitalized. For instance, an object of the class 'FIELDS'should be 
+  named FieldsObject.
+- The variable names should be kept short but descriptive. For example,
+  the electric field in the x direction at timestep n is named 'Ex_old'
+  whereas the updated electric field at timestep n + 1 is named 
+  'Ex_new'.
+# List Indexing 
+- There should be no space between the indices of an array when an 
+  element in an array is accessed. For example, the 'i-th' and 'j-th'
+  element of an array 'A' should be indexed as 'A[i,j]' and not 'A[i, j]'.
+# Math Operations 
+- There should be no spaces between operators in the same term but a 
+  space must be left between different terms and the operator. For 
+  example 'A times B plus C modulo D' should be written as:
+  (A*B + C)%D
