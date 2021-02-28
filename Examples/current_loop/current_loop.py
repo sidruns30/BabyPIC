@@ -26,7 +26,7 @@ NOTES:
 
 import sys 
 import os
-sys.path.append(os.path.abspath("../"))
+sys.path.append(os.path.abspath("../../"))
 
 from fields_class import FIELDS
 from fpfe_class import FPFE
