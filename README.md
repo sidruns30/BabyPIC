@@ -1,29 +1,11 @@
-<style TYPE="text/css">
-code.has-jax {font: inherit; font-size: 100%; background: inherit; border: inherit;}
-</style>
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-    tex2jax: {
-        inlineMath: [['$','$'], ['\\(','\\)']],
-        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'] // removed 'code' entry
-    }
-});
-MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i = 0; i < all.length; i += 1) {
-        all[i].SourceElement().parentNode.className += ' has-jax';
-    }
-});
-</script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML-full"></script>
 
 # BabayPIC
 
 ## Overview 
 **BabyPIC** is a 2D particle in cell (PIC) code written in Python that solves Maxwell's Equations 
 on a Yee grid and moves finite phase fluid elements (FPFEs) over the grid. The 2D Yee grid 
-assumes a magnetic field in the $z$ direction and an electric field in the $x-y$ plane. The motion
-of FPFEs generates currents in the $x$ and the $y$ directions, which are then used to compute the
+assumes a magnetic field in the z direction and an electric field in the x-y plane. The motion
+of FPFEs generates currents in the x and the y directions, which are then used to compute the
 electric fields. The current version does not support collisions between the FPFEs. Furthermore, only
 conducting and periodic boundary conditions are implemented in the current version.   
 
@@ -41,7 +23,7 @@ to be ahead of the electric fields in the intial condition.
 ### Equations Solved
 The units are set in a manner such that $\c=\epsilon=\mu=1$
 *Initial Integrator*  
-$-\nabla^2 V = \rho \rightarrow -\vec{\nabla} V = \vec{E}_{FPFE}$
+<a href="https://www.codecogs.com/eqnedit.php?latex=-\nabla^2&space;V&space;=&space;\rho&space;\rightarrow&space;-\vec{\nabla}&space;V&space;=&space;\vec{E}_{FPFE}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?-\nabla^2&space;V&space;=&space;\rho&space;\rightarrow&space;-\vec{\nabla}&space;V&space;=&space;\vec{E}_{FPFE}" title="-\nabla^2 V = \rho \rightarrow -\vec{\nabla} V = \vec{E}_{FPFE}" /></a>
 $\vec{E}^0 = \vec{E}_{FPFE} + \vec{E}_{back}$, $\vec{B}^{1/2} = \vec{B}_{back}$
 $\vec{v}_{FPFE}^{1/2} = \vec{v}_{FPFE}^0 + \frac{qdt}{2m}(\vec{E}^0 + \vec{v}_{FPFE}^0 \times \vec{B}^{1/2})$
 
