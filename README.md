@@ -1,5 +1,5 @@
 
-# BabayPIC
+# BabyPIC
 
 ## Overview 
 **BabyPIC** is a 2D particle in cell (PIC) code written in Python that solves Maxwell's Equations 
