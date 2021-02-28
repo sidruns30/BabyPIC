@@ -11,9 +11,9 @@ class FPFE:
     def __init__(self, GridParam, q, m, r_new, v_new):
         self.q = q
         self.m = m
-        self.r_old = np.zeros(3)
+        self.r_old = np.zeros(2)
         self.r_new = r_new
-        self.v_old = np.zeros(3)
+        self.v_old = np.zeros(2)
         self.v_new = v_new
         self.gamma_old = 1/np.sqrt(1 - norm(self.v_old)**2)
         self.gamma_new = 1/np.sqrt(1 - norm(self.v_new)**2)
