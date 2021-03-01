@@ -67,7 +67,8 @@ The units are set in a manner such that:
 ### run_simulation.py
 
 ## References 
-*
-*
-*
-*
+* https://static.ias.edu/pitp/2016/sites/pitp/files/
+* https://cds.cern.ch/record/2057438/files/1418884\_181-206.pdf
+* https://static.ias.edu/pitp/2016/sites/pitp/files/spitkovsky\_slides.pdf
+* https://reader.elsevier.com/reader/sd/pii/S0010465503004375?token=60B44E98CFBA28852E0E446C948DB3F10E7775D710652F5AEBB7932AC8312F97A230B07EF7FEB37AE1EECB778DC06776
+* https://iopscience.iop.org/article/10.3847/1538-4365/aab114/pdf
