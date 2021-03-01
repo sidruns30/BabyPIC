@@ -12,7 +12,7 @@ def push(FieldsObject, FpfeObject):
     Ex, Ey, B = interpolate_fields(FpfeObject, FieldsObject)
     E = np.array([Ex,Ey])    
     # Useful variables 
-    gamma = 1/sqrt(1 - FpfeObject.v_new[0]**2 - FpfeObject.v_new[1]**2)
+    gamma = FpfeObject.gamma_new
     # 3 velocity 
     u = gamma*FpfeObject.v_new 
     v_minus = u + (q*dt/m/2)*E
