@@ -5,8 +5,9 @@ from math import sqrt
 import numpy as np
 from interpolate_fields import interpolate_fields
 
-def push(FieldsObject, FpfeObject):
-    dt = FieldsObject.dt
+def push(FieldsObject, FpfeObject, dt=None):
+    if not dt:
+        dt = FieldsObject.dt
     m = FpfeObject.m
     q = FpfeObject.q
     Ex, Ey, B = interpolate_fields(FpfeObject, FieldsObject)
