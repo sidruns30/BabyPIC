@@ -29,6 +29,7 @@ from fpfe_class import FPFE
 from poisson import charge_deposition, grad_v
 from particle_push import push
 from current_deposition import deposit
+from interpolate_fields import interpolate_fields
 from boundary_conditions import set_boundary_condition_fields
 from boundary_conditions import set_boundary_condition_fpfe
 
@@ -39,22 +40,21 @@ from numpy.linalg import norm
 # Set the grid properties 
 class GRID:
     def __init__(self):
-        self.nx = 50
-        self.ny = 50
-        self.xmin = -5
-        self.xmax = 5
-        self.ymin = -5
-        self.ymax = 5
+        self.nx = 200
+        self.ny = 200
+        self.xmin = -1
+        self.xmax = 1
+        self.ymin = -1
+        self.ymax = 1
 GridParam = GRID()
 
 ### Set the FPFE properties 
-N_FPFE = 200
-charges = 1e-1*np.ones(N_FPFE)
-masses = 1e4*np.ones(N_FPFE)
+N_FPFE = 1
+charges = [1,1]
+masses = [1,1]
 # Set positions
-theta = np.linspace(0, 2*np.pi, N_FPFE)
-positions = np.array([[np.cos(t), np.sin(t)] for t in theta])
-velocities = np.array([[-np.sin(t)/5, np.cos(t)/5] for t in theta])
+positions = np.array([[-0,0], [2,0]])
+velocities = np.array([[0,0], [0,0]])
 FPFE_list = []
 for i in range(N_FPFE):
     FPFE_list.append(FPFE(GridParam, q=charges[i], m=masses[i], 
@@ -71,12 +71,16 @@ STEP 0
 charge_deposition(FieldsObject, FPFE_list)
 grad_v(FieldsObject)
 # Add divergence free background electric field to existing field
-Ex_div_free = 0*np.ones((GridParam.nx+2, GridParam.ny+1))
+Ex_div_free = -100*np.ones((GridParam.nx+2, GridParam.ny+1))
 Ey_div_free = np.zeros((GridParam.nx+1, GridParam.ny+2))
 
 FieldsObject.Ex_new[:,:] += Ex_div_free
 FieldsObject.Ey_new[:,:] += Ey_div_free
 
+E1 = []
+E2 = []
+B1 = []
+t = []
 ### Define one simulation timestep 
 def timestep(FieldsObject, FPFE_list):
     step = 0
@@ -104,16 +108,23 @@ for i in range(timesteps):
     print('Timestep: ', i+1)
     timestep(FieldsObject, FPFE_list)
     print('Velocity Magnitudes:')
-    print([norm(FPFE_list[0].v_new), norm(FPFE_list[1].v_new)])
-    if (i%20==0):
+    print([norm(FPFE_list[0].v_new)])#, norm(FPFE_list[1].v_new)])
+    t.append(i)
+    e1, e2, b1 = interpolate_fields(FPFE_list[0], FieldsObject)
+    E1.append(e1)
+    E2.append(e2)
+    B1.append(b1)
+'''
+    if (i%100==0):
         
         
         ###----------------PLOTTING------------------------------- 
         
         import matplotlib.pyplot as plt
+        plt.figure(figsize=(10,10))
         X,Y = np.meshgrid(FieldsObject.x_edges, FieldsObject.y_edges)
         for FpfeObject in FPFE_list:
-            plt.plot(FpfeObject.r_new[0], FpfeObject.r_new[1], 'go', alpha=0.1)
+            plt.plot(FpfeObject.r_new[0], FpfeObject.r_new[1], 'go', alpha=1)
         #plt.pcolormesh(X,Y,FieldsObject.rho.T)
         plt.pcolormesh(X[1:-1,1:-1],Y[1:-1,1:-1],FieldsObject.Bz_old[1:-1,1:-1].T, 
                        cmap='seismic', vmin=-5, vmax=5)
@@ -125,5 +136,22 @@ for i in range(timesteps):
         plt.xlim((GridParam.xmin, GridParam.xmax))
         plt.ylim((GridParam.ymin, GridParam.ymax))
         plt.title('$B_z$', fontsize=20)
-        plt.savefig('plots/fig'+str(i//20)+'.png')
+        plt.savefig('plots/fig'+str(i//100)+'.png')
         plt.close()
+
+E1 = np.array(E1)
+E2 = np.array(E2)
+'''
+import matplotlib.pyplot as plt
+
+plt.plot(t,E1,t,E2,t,)
+
+plt.plot(t,E1,label='Ex')
+plt.plot(t,E2,label='Ey')
+plt.plot(t,B1,label='Bz')
+plt.legend()
+
+
+
+
+
