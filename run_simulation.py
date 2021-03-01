@@ -40,21 +40,21 @@ from numpy.linalg import norm
 # Set the grid properties 
 class GRID:
     def __init__(self):
-        self.nx = 200
-        self.ny = 200
-        self.xmin = -1
-        self.xmax = 1
-        self.ymin = -1
-        self.ymax = 1
+        self.nx = 100
+        self.ny = 100
+        self.xmin = -0.2
+        self.xmax = 0.2
+        self.ymin = -0.2
+        self.ymax = 0.2
 GridParam = GRID()
 
 ### Set the FPFE properties 
 N_FPFE = 1
-charges = [1,1]
+charges = [0,1]
 masses = [1,1]
 # Set positions
-positions = np.array([[-0,0], [2,0]])
-velocities = np.array([[0,0], [0,0]])
+positions = np.array([[0,0], [2,0]])
+velocities = np.array([[0.1,0], [0,0]])
 FPFE_list = []
 for i in range(N_FPFE):
     FPFE_list.append(FPFE(GridParam, q=charges[i], m=masses[i], 
@@ -64,22 +64,31 @@ for i in range(N_FPFE):
 # Create the FieldsOject
 FieldsObject = FIELDS(GridParam)
 
-'''
-STEP 0
-'''
+# STEP 0
 # Solve Gausses Law and calculate electric fields
 charge_deposition(FieldsObject, FPFE_list)
 grad_v(FieldsObject)
-# Add divergence free background electric field to existing field
-Ex_div_free = -100*np.ones((GridParam.nx+2, GridParam.ny+1))
+# Divergence free background fields
+Ex_div_free = 1e1*np.ones((GridParam.nx+2, GridParam.ny+1))
 Ey_div_free = np.zeros((GridParam.nx+1, GridParam.ny+2))
-
+Bz_div_free = np.zeros((GridParam.nx+2, GridParam.ny+2))
+# Add divergence free background electric field to existing field
 FieldsObject.Ex_new[:,:] += Ex_div_free
 FieldsObject.Ey_new[:,:] += Ey_div_free
+FieldsObject.Bz_new[:,:] += Bz_div_free
+# Set the old fields to be the same as the new ones
+FieldsObject.Ex_old = FieldsObject.Ex_new
+FieldsObject.Ey_old = FieldsObject.Ey_new
+FieldsObject.Bz_old = FieldsObject.Bz_new
+# Update the momentum of FPFEs from initial fields 
+for FpfeObject in FPFE_list:
+    push(FieldsObject, FpfeObject, dt=FieldsObject.dt/2)
+
 
 E1 = []
 E2 = []
 B1 = []
+pos = []
 t = []
 ### Define one simulation timestep 
 def timestep(FieldsObject, FPFE_list):
@@ -107,13 +116,14 @@ FpfeObject = FPFE_list[0]
 for i in range(timesteps):
     print('Timestep: ', i+1)
     timestep(FieldsObject, FPFE_list)
-    print('Velocity Magnitudes:')
-    print([norm(FPFE_list[0].v_new)])#, norm(FPFE_list[1].v_new)])
+    print('Velocity Magnitude(s)):')
+    print([norm(FPFE_list[0].v_new)])
     t.append(i)
     e1, e2, b1 = interpolate_fields(FPFE_list[0], FieldsObject)
     E1.append(e1)
     E2.append(e2)
     B1.append(b1)
+    pos.append(FPFE_list[0].r_new[0])
 '''
     if (i%100==0):
         
@@ -139,19 +149,18 @@ for i in range(timesteps):
         plt.savefig('plots/fig'+str(i//100)+'.png')
         plt.close()
 
-E1 = np.array(E1)
-E2 = np.array(E2)
 '''
 import matplotlib.pyplot as plt
 
-plt.plot(t,E1,t,E2,t,)
-
-plt.plot(t,E1,label='Ex')
-plt.plot(t,E2,label='Ey')
-plt.plot(t,B1,label='Bz')
-plt.legend()
-
-
+fig = plt.figure()
+ax1 = fig.add_subplot(121)
+ax2 = fig.add_subplot(122)
+ax1.plot(t,E1,'o',label='Ex')
+ax1.plot(t,E2,'o',label='Ey')
+ax1.plot(t,B1,'o',label='Bz')
+ax1.legend()
+ax2.plot(t,pos, label='position')
+ax2.legend()
 
 
 
