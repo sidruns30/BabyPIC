@@ -51,9 +51,9 @@ The units are set in a manner such that:
 ## Files 
 
 ### boundary_conditions.py
-
+Enforces the boundary conditions at each timestep. The file contains two boundary condition functions, for class FIELDS and FPFE respectively. The current options for the fields boundary conditions include *periodic* and *conducting*. The periodic boundary conditions copy the values from the cell of the last active zones into the ghost cells. Conducting boundary conditions set the electric fields parallel to the axes to be 0. The fpfe boundary conditions (not yet functional) work similarly, with *periodic* and *conducting* options. In the conducting option, the FPFE is lost from the simulation domain and its charge is deposited over the simulation boundary.   
 ### current_deposition.py
-
+Deposit current on the Yee Grid from the motion of the FPFEs. The current from each FPFE is estimated as its charge times change in position per timestep. The current is then split into 4 parts weighted based on the distance of the FPFE center from each of the 4 sides of the Yee Grid cell. If the FPFE crosses a grid cell within a timestep then the displacement of the FPFE is brokendown into 2 steps such that the FPFE lies within a cell during each of the partial displacements. This is the *zigzag* scheme used in some of the PIC codes.    
 ### fields_class.py
 
 ### fpfe_class.py
